@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 # --- CONFIGURATION ---
-INPUT_IMAGE_FILE = 'my_grayscale_image.png'  # <--- RENAME THIS to your file!
+INPUT_IMAGE_FILE = 'my_grayscale_image.png'  
 OUTPUT_HEADER_FILE = 'image_data.h'
 ARRAY_NAME = 'car_image_data'
 IMAGE_WIDTH = 128
@@ -56,4 +56,5 @@ def generate_c_header(image_path, header_path, array_name, width, height):
         print(f"An unexpected error occurred: {e}")
 
 # Run the function
+
 generate_c_header(INPUT_IMAGE_FILE, OUTPUT_HEADER_FILE, ARRAY_NAME, IMAGE_WIDTH, IMAGE_HEIGHT)
