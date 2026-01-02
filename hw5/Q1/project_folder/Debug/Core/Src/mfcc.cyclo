@@ -1,0 +1,6 @@
+../Core/Src/mfcc.c:5:8:create_dct_matrix	3
+../Core/Src/mfcc.c:17:7:frequencyToMelSpace	1
+../Core/Src/mfcc.c:21:7:melSpaceToFrequency	1
+../Core/Src/mfcc.c:25:5:create_mel_fbank	11
+../Core/Src/mfcc.c:96:6:init_mfcc_instance	2
+../Core/Src/mfcc.c:157:6:mfcc_compute	9
