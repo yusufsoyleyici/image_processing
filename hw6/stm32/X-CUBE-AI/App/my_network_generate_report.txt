@@ -1,0 +1,532 @@
+ST Edge AI Core v2.2.0-20266 2adc00962
+Created date          : 2026-01-04 14:20:38
+Parameters            : generate --target stm32f4 --name my_network -m C:/Users/yyigi/Desktop/stm32_hw/hw6/mini_efficientnet.tflite --compression none --verbosity 1 --workspace C:/Users/yyigi/AppData/Local/Temp/mxAI_workspace1639915607591001354547396795714926 --output C:/Users/yyigi/.stm32cubemx/my_network_output
+
+Exec/report summary (generate)
+------------------------------------------------------------------------------------------------------------
+model file         :   C:\Users\yyigi\Desktop\stm32_hw\hw6\mini_efficientnet.tflite                         
+type               :   tflite                                                                               
+c_name             :   my_network                                                                           
+compression        :   none                                                                                 
+options            :   allocate-inputs, allocate-outputs                                                    
+optimization       :   balanced                                                                             
+target/series      :   stm32f4                                                                              
+workspace dir      :   C:\Users\yyigi\AppData\Local\Temp\mxAI_workspace1639915607591001354547396795714926   
+output dir         :   C:\Users\yyigi\.stm32cubemx\my_network_output                                        
+model_fmt          :   ss/sa per channel                                                                    
+model_name         :   mini_efficientnet                                                                    
+model_hash         :   0x0d07288a90f91ad0f2fed654e2a0e69e                                                   
+params #           :   16,650 items (18.16 KiB)                                                             
+------------------------------------------------------------------------------------------------------------
+input 1/1          :   'serving_default_keras_tensor0', f32(1x32x32x3), 12.00 KBytes, activations           
+output 1/1         :   'conversion_34', f32(1x10), 40 Bytes, activations                                    
+macc               :   1,281,652                                                                            
+weights (ro)       :   18,600 B (18.16 KiB) (1 segment) / -48,000(-72.1%) vs float model                    
+activations (rw)   :   32,768 B (32.00 KiB) (1 segment) *                                                   
+ram (total)        :   32,768 B (32.00 KiB) = 32,768 + 0 + 0                                                
+------------------------------------------------------------------------------------------------------------
+(*) 'input'/'output' buffers are allocated in the activations buffer
+
+Model name - mini_efficientnet
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+m_id   layer (type,original)                     oshape                 param/size         macc                    connected to   | c_size         c_macc             c_type                 
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+0      serving_default_keras_tensor0 (Input, )   [b:1,h:32,w:32,c:3]                                                              |                +6,144(+100.0%)    Conversion_[0]         
+       conversion_0 (Conversion, QUANTIZE)       [b:1,h:32,w:32,c:3]                      6,144   serving_default_keras_tensor0   |                -6,144(-100.0%)    
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+1      conv2d_1 (Conv2D, CONV_2D)                [b:1,h:16,w:16,c:16]   448/496         110,608                    conversion_0   |                                   Conv2D_[1]             
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+2      nl_2 (Nonlinearity, LOGISTIC)             [b:1,h:16,w:16,c:16]                    40,960                        conv2d_1   |                -36,864(-90.0%)    Nonlinearity_[2]       
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+3      eltwise_3 (Eltwise, MUL)                  [b:1,h:16,w:16,c:16]                     4,096                        conv2d_1   |                                   Eltwise/mul_[3]        
+                                                                                                                           nl_2   | 
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+4      conv2d_4 (Conv2D, DEPTHWISE_CONV_2D)      [b:1,h:16,w:16,c:16]   160/208          36,880                       eltwise_3   |                                   Pad_/Conv2D_[4, 5]     
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+5      nl_5 (Nonlinearity, LOGISTIC)             [b:1,h:16,w:16,c:16]                    40,960                        conv2d_4   |                -36,864(-90.0%)    Nonlinearity_[6]       
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+6      eltwise_6 (Eltwise, MUL)                  [b:1,h:16,w:16,c:16]                     4,096                        conv2d_4   |                                   Eltwise/mul_[7]        
+                                                                                                                           nl_5   | 
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+7      conv2d_7 (Conv2D, CONV_2D)                [b:1,h:16,w:16,c:16]   272/320          65,552                       eltwise_6   |                                   Conv2D_[8]             
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+8      eltwise_8 (Eltwise, ADD)                  [b:1,h:16,w:16,c:16]                     4,096                       eltwise_3   |                                   Eltwise/add_[9]        
+                                                                                                                       conv2d_7   | 
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+9      conv2d_9 (Conv2D, CONV_2D)                [b:1,h:16,w:16,c:64]   1,088/1,280     262,208                       eltwise_8   |                                   Conv2D_[10]            
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+10     nl_10 (Nonlinearity, LOGISTIC)            [b:1,h:16,w:16,c:64]                   163,840                        conv2d_9   |                -147,456(-90.0%)   Nonlinearity_[11]      
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+11     eltwise_11 (Eltwise, MUL)                 [b:1,h:16,w:16,c:64]                    16,384                        conv2d_9   |                                   Eltwise/mul_[12]       
+                                                                                                                          nl_10   | 
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+12     conv2d_12 (Conv2D, DEPTHWISE_CONV_2D)     [b:1,h:8,w:8,c:64]     640/832          36,928                      eltwise_11   |                                   Pad_/Conv2D_[13, 14]   
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+13     nl_13 (Nonlinearity, LOGISTIC)            [b:1,h:8,w:8,c:64]                      40,960                       conv2d_12   |                -36,864(-90.0%)    Nonlinearity_[15]      
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+14     eltwise_14 (Eltwise, MUL)                 [b:1,h:8,w:8,c:64]                       4,096                       conv2d_12   |                                   Eltwise/mul_[16]       
+                                                                                                                          nl_13   | 
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+15     conv2d_15 (Conv2D, CONV_2D)               [b:1,h:8,w:8,c:24]     1,560/1,632      98,328                      eltwise_14   |                                   Conv2D_[17]            
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+16     conv2d_16 (Conv2D, CONV_2D)               [b:1,h:8,w:8,c:96]     2,400/2,688     147,552                       conv2d_15   |                                   Conv2D_[18]            
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+17     nl_17 (Nonlinearity, LOGISTIC)            [b:1,h:8,w:8,c:96]                      61,440                       conv2d_16   |                -55,296(-90.0%)    Nonlinearity_[19]      
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+18     eltwise_18 (Eltwise, MUL)                 [b:1,h:8,w:8,c:96]                       6,144                       conv2d_16   |                                   Eltwise/mul_[20]       
+                                                                                                                          nl_17   | 
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+19     conv2d_19 (Conv2D, DEPTHWISE_CONV_2D)     [b:1,h:8,w:8,c:96]     960/1,248        55,392                      eltwise_18   |                                   Pad_/Conv2D_[21, 22]   
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+20     nl_20 (Nonlinearity, LOGISTIC)            [b:1,h:8,w:8,c:96]                      61,440                       conv2d_19   |                -55,296(-90.0%)    Nonlinearity_[23]      
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+21     eltwise_21 (Eltwise, MUL)                 [b:1,h:8,w:8,c:96]                       6,144                       conv2d_19   |                                   Eltwise/mul_[24]       
+                                                                                                                          nl_20   | 
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+22     conv2d_22 (Conv2D, CONV_2D)               [b:1,h:8,w:8,c:24]     2,328/2,400     147,480                      eltwise_21   |                                   Conv2D_[25]            
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+23     eltwise_23 (Eltwise, ADD)                 [b:1,h:8,w:8,c:24]                       1,536                       conv2d_15   |                                   Eltwise/add_[26]       
+                                                                                                                      conv2d_22   | 
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+24     conv2d_24 (Conv2D, CONV_2D)               [b:1,h:8,w:8,c:96]     2,400/2,688     147,552                      eltwise_23   |                                   Conv2D_[27]            
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+25     nl_25 (Nonlinearity, LOGISTIC)            [b:1,h:8,w:8,c:96]                      61,440                       conv2d_24   |                -55,296(-90.0%)    Nonlinearity_[28]      
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+26     eltwise_26 (Eltwise, MUL)                 [b:1,h:8,w:8,c:96]                       6,144                       conv2d_24   |                                   Eltwise/mul_[29]       
+                                                                                                                          nl_25   | 
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+27     conv2d_27 (Conv2D, DEPTHWISE_CONV_2D)     [b:1,h:4,w:4,c:96]     960/1,248        13,920                      eltwise_26   |                                   Pad_/Conv2D_[30, 31]   
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+28     nl_28 (Nonlinearity, LOGISTIC)            [b:1,h:4,w:4,c:96]                      15,360                       conv2d_27   |                -13,824(-90.0%)    Nonlinearity_[32]      
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+29     eltwise_29 (Eltwise, MUL)                 [b:1,h:4,w:4,c:96]                       1,536                       conv2d_27   |                                   Eltwise/mul_[33]       
+                                                                                                                          nl_28   | 
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+30     conv2d_30 (Conv2D, CONV_2D)               [b:1,h:4,w:4,c:32]     3,104/3,200      49,184                      eltwise_29   |                                   Conv2D_[34]            
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+31     pool_31 (Pool, MEAN)                      [b:1,h:1,w:1,c:32]                         512                       conv2d_30   |                                   Pool_[35]              
+       reshape_31_reshape (Reshape, MEAN)        [b:1,c:32]                                                             pool_31   |                                   
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+32     tfl_pseudo_qconst1 (Placeholder, )        [b:10,c:32]            320/320                                                   | +40(+12.5%)    +330(+100.0%)      Dense_[36]             
+       tfl_pseudo_qconst (Placeholder, )         [b:10]                 10/40                                                     | -40(-100.0%)                      
+       gemm_32 (Gemm, FULLY_CONNECTED)           [b:1,c:10]                                 330              reshape_31_reshape   |                -330(-100.0%)      
+                                                                                                             tfl_pseudo_qconst1   | 
+                                                                                                              tfl_pseudo_qconst   | 
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+33     nl_33 (Nonlinearity, SOFTMAX)             [b:1,c:10]                                 150                         gemm_32   |                                   Nonlinearity_[37]      
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+34     conversion_34 (Conversion, DEQUANTIZE)    [b:1,c:10]                                  20                           nl_33   |                                   Conversion_[o][38]     
+------ ----------------------------------------- ---------------------- ------------- --------- ------------------------------- --- -------------- ------------------ ---------------------- 
+model/c-model: macc=1,719,412/1,281,652 -437,760(-25.5%) weights=18,600/18,600  activations=--/32,768 io=--/0
+
+
+
+Generated C-graph summary
+------------------------------------------------------------------------------------------------------------------------
+model name            : mini_efficientnet
+c-name                : my_network
+c-node #              : 39
+c-array #             : 80
+activations size      : 32768 (1 segment)
+weights size          : 18600 (1 segment)
+macc                  : 1281652
+inputs                : ['serving_default_keras_tensor0_output']
+outputs               : ['conversion_34_output']
+
+C-Arrays (80)
+------ -------------------------------------- ------------- ------------------------- ----------- --------- 
+c_id   name (*_array)                         item/size     domain/mem-pool           c-type      comment   
+------ -------------------------------------- ------------- ------------------------- ----------- --------- 
+0      conv2d_12_bias                         64/256        weights/weights           const s32             
+1      conv2d_12_output                       4096/4096     activations/**default**   s8                    
+2      conv2d_12_pad_before_output            20736/20736   activations/**default**   s8                    
+3      conv2d_12_scratch0                     2369/2369     activations/**default**   s8                    
+4      conv2d_12_weights                      576/576       weights/weights           const s8              
+5      conv2d_15_bias                         24/96         weights/weights           const s32             
+6      conv2d_15_output                       1536/1536     activations/**default**   s8                    
+7      conv2d_15_scratch0                     496/496       activations/**default**   s8                    
+8      conv2d_15_weights                      1536/1536     weights/weights           const s8              
+9      conv2d_16_bias                         96/384        weights/weights           const s32             
+10     conv2d_16_output                       6144/6144     activations/**default**   s8                    
+11     conv2d_16_scratch0                     1056/1056     activations/**default**   s8                    
+12     conv2d_16_weights                      2304/2304     weights/weights           const s8              
+13     conv2d_19_bias                         96/384        weights/weights           const s32             
+14     conv2d_19_output                       6144/6144     activations/**default**   s8                    
+15     conv2d_19_pad_before_output            9600/9600     activations/**default**   s8                    
+16     conv2d_19_scratch0                     3553/3553     activations/**default**   s8                    
+17     conv2d_19_weights                      864/864       weights/weights           const s8              
+18     conv2d_1_bias                          16/64         weights/weights           const s32             
+19     conv2d_1_output                        4096/4096     activations/**default**   s8                    
+20     conv2d_1_scratch0                      1196/1196     activations/**default**   s8                    
+21     conv2d_1_weights                       432/432       weights/weights           const s8              
+22     conv2d_22_bias                         24/96         weights/weights           const s32             
+23     conv2d_22_output                       1536/1536     activations/**default**   s8                    
+24     conv2d_22_scratch0                     624/624       activations/**default**   s8                    
+25     conv2d_22_weights                      2304/2304     weights/weights           const s8              
+26     conv2d_24_bias                         96/384        weights/weights           const s32             
+27     conv2d_24_output                       6144/6144     activations/**default**   s8                    
+28     conv2d_24_scratch0                     1056/1056     activations/**default**   s8                    
+29     conv2d_24_weights                      2304/2304     weights/weights           const s8              
+30     conv2d_27_bias                         96/384        weights/weights           const s32             
+31     conv2d_27_output                       1536/1536     activations/**default**   s8                    
+32     conv2d_27_pad_before_output            9600/9600     activations/**default**   s8                    
+33     conv2d_27_scratch0                     3553/3553     activations/**default**   s8                    
+34     conv2d_27_weights                      864/864       weights/weights           const s8              
+35     conv2d_30_bias                         32/128        weights/weights           const s32             
+36     conv2d_30_output                       512/512       activations/**default**   s8                    
+37     conv2d_30_scratch0                     704/704       activations/**default**   s8                    
+38     conv2d_30_weights                      3072/3072     weights/weights           const s8              
+39     conv2d_4_bias                          16/64         weights/weights           const s32             
+40     conv2d_4_output                        4096/4096     activations/**default**   s8                    
+41     conv2d_4_pad_before_output             5184/5184     activations/**default**   s8                    
+42     conv2d_4_scratch0                      593/593       activations/**default**   s8                    
+43     conv2d_4_weights                       144/144       weights/weights           const s8              
+44     conv2d_7_bias                          16/64         weights/weights           const s32             
+45     conv2d_7_output                        4096/4096     activations/**default**   s8                    
+46     conv2d_7_scratch0                      224/224       activations/**default**   s8                    
+47     conv2d_7_weights                       256/256       weights/weights           const s8              
+48     conv2d_9_bias                          64/256        weights/weights           const s32             
+49     conv2d_9_output                        16384/16384   activations/**default**   s8                    
+50     conv2d_9_scratch0                      704/704       activations/**default**   s8                    
+51     conv2d_9_weights                       1024/1024     weights/weights           const s8              
+52     conversion_0_output                    3072/3073     activations/**default**   s8                    
+53     conversion_34_output                   10/40         activations/**default**   float       /output   
+54     eltwise_11_output                      16384/16384   activations/**default**   s8                    
+55     eltwise_14_output                      4096/4096     activations/**default**   s8                    
+56     eltwise_18_output                      6144/6144     activations/**default**   s8                    
+57     eltwise_21_output                      6144/6144     activations/**default**   s8                    
+58     eltwise_23_output                      1536/1536     activations/**default**   s8                    
+59     eltwise_26_output                      6144/6144     activations/**default**   s8                    
+60     eltwise_29_output                      1536/1536     activations/**default**   s8                    
+61     eltwise_3_output                       4096/4096     activations/**default**   s8                    
+62     eltwise_6_output                       4096/4096     activations/**default**   s8                    
+63     eltwise_8_output                       4096/4096     activations/**default**   s8                    
+64     gemm_32_bias                           10/40         weights/weights           const s32             
+65     gemm_32_output                         10/10         activations/**default**   s8                    
+66     gemm_32_scratch0                       82/164        activations/**default**   s16                   
+67     gemm_32_weights                        320/320       weights/weights           const s8              
+68     nl_10_output                           16384/16384   activations/**default**   s8                    
+69     nl_13_output                           4096/4096     activations/**default**   s8                    
+70     nl_17_output                           6144/6144     activations/**default**   s8                    
+71     nl_20_output                           6144/6144     activations/**default**   s8                    
+72     nl_25_output                           6144/6144     activations/**default**   s8                    
+73     nl_28_output                           1536/1536     activations/**default**   s8                    
+74     nl_2_output                            4096/4096     activations/**default**   s8                    
+75     nl_33_output                           10/10         activations/**default**   s8                    
+76     nl_33_scratch0                         124/496       activations/**default**   s32                   
+77     nl_5_output                            4096/4096     activations/**default**   s8                    
+78     pool_31_output                         32/32         activations/**default**   s8                    
+79     serving_default_keras_tensor0_output   3072/12288    activations/**default**   float       /input    
+------ -------------------------------------- ------------- ------------------------- ----------- --------- 
+
+C-Layers (39)
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+c_id   name (*_layer)         id   layer_type      macc     rom    tensors                                   shape (array id)        
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+0      conversion_0           0    Conversion      6144     0      I: serving_default_keras_tensor0_output   f32(1x32x32x3) (79)     
+                                                                   O: conversion_0_output                    int8(1x32x32x3) (52)    
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+1      conv2d_1               1    Conv2D          110608   496    I: conversion_0_output                    int8(1x32x32x3) (52)    
+                                                                   S: conv2d_1_scratch0                                              
+                                                                   W: conv2d_1_weights                       int8(16x3x3x3) (21)     
+                                                                   W: conv2d_1_bias                          int32(16) (18)          
+                                                                   O: conv2d_1_output                        int8(1x16x16x16) (19)   
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+2      nl_2                   2    Nonlinearity    4096     0      I: conv2d_1_output                        int8(1x16x16x16) (19)   
+                                                                   O: nl_2_output                            int8(1x16x16x16) (74)   
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+3      eltwise_3              3    Eltwise/mul     4096     0      I: conv2d_1_output                        int8(1x16x16x16) (19)   
+                                                                   I: nl_2_output                            int8(1x16x16x16) (19)   
+                                                                   O: eltwise_3_output                       int8(1x16x16x16) (61)   
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+4      conv2d_4_pad_before    4    Pad             0        0      I: eltwise_3_output                       int8(1x16x16x16) (61)   
+                                                                   O: conv2d_4_pad_before_output             int8(1x18x18x16) (41)   
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+5      conv2d_4               4    Conv2D          36880    208    I: conv2d_4_pad_before_output             int8(1x18x18x16) (41)   
+                                                                   S: conv2d_4_scratch0                                              
+                                                                   W: conv2d_4_weights                       int8(1x3x3x16) (43)     
+                                                                   W: conv2d_4_bias                          int32(16) (39)          
+                                                                   O: conv2d_4_output                        int8(1x16x16x16) (40)   
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+6      nl_5                   5    Nonlinearity    4096     0      I: conv2d_4_output                        int8(1x16x16x16) (40)   
+                                                                   O: nl_5_output                            int8(1x16x16x16) (77)   
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+7      eltwise_6              6    Eltwise/mul     4096     0      I: conv2d_4_output                        int8(1x16x16x16) (40)   
+                                                                   I: nl_5_output                            int8(1x16x16x16) (40)   
+                                                                   O: eltwise_6_output                       int8(1x16x16x16) (62)   
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+8      conv2d_7               7    Conv2D          65552    320    I: eltwise_6_output                       int8(1x16x16x16) (62)   
+                                                                   S: conv2d_7_scratch0                                              
+                                                                   W: conv2d_7_weights                       int8(16x1x1x16) (47)    
+                                                                   W: conv2d_7_bias                          int32(16) (44)          
+                                                                   O: conv2d_7_output                        int8(1x16x16x16) (45)   
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+9      eltwise_8              8    Eltwise/add     4096     0      I: eltwise_3_output                       int8(1x16x16x16) (61)   
+                                                                   I: conv2d_7_output                        int8(1x16x16x16) (61)   
+                                                                   O: eltwise_8_output                       int8(1x16x16x16) (63)   
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+10     conv2d_9               9    Conv2D          262208   1280   I: eltwise_8_output                       int8(1x16x16x16) (63)   
+                                                                   S: conv2d_9_scratch0                                              
+                                                                   W: conv2d_9_weights                       int8(64x1x1x16) (51)    
+                                                                   W: conv2d_9_bias                          int32(64) (48)          
+                                                                   O: conv2d_9_output                        int8(1x16x16x64) (49)   
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+11     nl_10                  10   Nonlinearity    16384    0      I: conv2d_9_output                        int8(1x16x16x64) (49)   
+                                                                   O: nl_10_output                           int8(1x16x16x64) (68)   
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+12     eltwise_11             11   Eltwise/mul     16384    0      I: conv2d_9_output                        int8(1x16x16x64) (49)   
+                                                                   I: nl_10_output                           int8(1x16x16x64) (49)   
+                                                                   O: eltwise_11_output                      int8(1x16x16x64) (54)   
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+13     conv2d_12_pad_before   12   Pad             0        0      I: eltwise_11_output                      int8(1x16x16x64) (54)   
+                                                                   O: conv2d_12_pad_before_output            int8(1x18x18x64) (2)    
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+14     conv2d_12              12   Conv2D          36928    832    I: conv2d_12_pad_before_output            int8(1x18x18x64) (2)    
+                                                                   S: conv2d_12_scratch0                                             
+                                                                   W: conv2d_12_weights                      int8(1x3x3x64) (4)      
+                                                                   W: conv2d_12_bias                         int32(64) (0)           
+                                                                   O: conv2d_12_output                       int8(1x8x8x64) (1)      
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+15     nl_13                  13   Nonlinearity    4096     0      I: conv2d_12_output                       int8(1x8x8x64) (1)      
+                                                                   O: nl_13_output                           int8(1x8x8x64) (69)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+16     eltwise_14             14   Eltwise/mul     4096     0      I: conv2d_12_output                       int8(1x8x8x64) (1)      
+                                                                   I: nl_13_output                           int8(1x8x8x64) (1)      
+                                                                   O: eltwise_14_output                      int8(1x8x8x64) (55)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+17     conv2d_15              15   Conv2D          98328    1632   I: eltwise_14_output                      int8(1x8x8x64) (55)     
+                                                                   S: conv2d_15_scratch0                                             
+                                                                   W: conv2d_15_weights                      int8(24x1x1x64) (8)     
+                                                                   W: conv2d_15_bias                         int32(24) (5)           
+                                                                   O: conv2d_15_output                       int8(1x8x8x24) (6)      
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+18     conv2d_16              16   Conv2D          147552   2688   I: conv2d_15_output                       int8(1x8x8x24) (6)      
+                                                                   S: conv2d_16_scratch0                                             
+                                                                   W: conv2d_16_weights                      int8(96x1x1x24) (12)    
+                                                                   W: conv2d_16_bias                         int32(96) (9)           
+                                                                   O: conv2d_16_output                       int8(1x8x8x96) (10)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+19     nl_17                  17   Nonlinearity    6144     0      I: conv2d_16_output                       int8(1x8x8x96) (10)     
+                                                                   O: nl_17_output                           int8(1x8x8x96) (70)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+20     eltwise_18             18   Eltwise/mul     6144     0      I: conv2d_16_output                       int8(1x8x8x96) (10)     
+                                                                   I: nl_17_output                           int8(1x8x8x96) (10)     
+                                                                   O: eltwise_18_output                      int8(1x8x8x96) (56)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+21     conv2d_19_pad_before   19   Pad             0        0      I: eltwise_18_output                      int8(1x8x8x96) (56)     
+                                                                   O: conv2d_19_pad_before_output            int8(1x10x10x96) (15)   
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+22     conv2d_19              19   Conv2D          55392    1248   I: conv2d_19_pad_before_output            int8(1x10x10x96) (15)   
+                                                                   S: conv2d_19_scratch0                                             
+                                                                   W: conv2d_19_weights                      int8(1x3x3x96) (17)     
+                                                                   W: conv2d_19_bias                         int32(96) (13)          
+                                                                   O: conv2d_19_output                       int8(1x8x8x96) (14)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+23     nl_20                  20   Nonlinearity    6144     0      I: conv2d_19_output                       int8(1x8x8x96) (14)     
+                                                                   O: nl_20_output                           int8(1x8x8x96) (71)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+24     eltwise_21             21   Eltwise/mul     6144     0      I: conv2d_19_output                       int8(1x8x8x96) (14)     
+                                                                   I: nl_20_output                           int8(1x8x8x96) (14)     
+                                                                   O: eltwise_21_output                      int8(1x8x8x96) (57)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+25     conv2d_22              22   Conv2D          147480   2400   I: eltwise_21_output                      int8(1x8x8x96) (57)     
+                                                                   S: conv2d_22_scratch0                                             
+                                                                   W: conv2d_22_weights                      int8(24x1x1x96) (25)    
+                                                                   W: conv2d_22_bias                         int32(24) (22)          
+                                                                   O: conv2d_22_output                       int8(1x8x8x24) (23)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+26     eltwise_23             23   Eltwise/add     1536     0      I: conv2d_15_output                       int8(1x8x8x24) (6)      
+                                                                   I: conv2d_22_output                       int8(1x8x8x24) (6)      
+                                                                   O: eltwise_23_output                      int8(1x8x8x24) (58)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+27     conv2d_24              24   Conv2D          147552   2688   I: eltwise_23_output                      int8(1x8x8x24) (58)     
+                                                                   S: conv2d_24_scratch0                                             
+                                                                   W: conv2d_24_weights                      int8(96x1x1x24) (29)    
+                                                                   W: conv2d_24_bias                         int32(96) (26)          
+                                                                   O: conv2d_24_output                       int8(1x8x8x96) (27)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+28     nl_25                  25   Nonlinearity    6144     0      I: conv2d_24_output                       int8(1x8x8x96) (27)     
+                                                                   O: nl_25_output                           int8(1x8x8x96) (72)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+29     eltwise_26             26   Eltwise/mul     6144     0      I: conv2d_24_output                       int8(1x8x8x96) (27)     
+                                                                   I: nl_25_output                           int8(1x8x8x96) (27)     
+                                                                   O: eltwise_26_output                      int8(1x8x8x96) (59)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+30     conv2d_27_pad_before   27   Pad             0        0      I: eltwise_26_output                      int8(1x8x8x96) (59)     
+                                                                   O: conv2d_27_pad_before_output            int8(1x10x10x96) (32)   
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+31     conv2d_27              27   Conv2D          13920    1248   I: conv2d_27_pad_before_output            int8(1x10x10x96) (32)   
+                                                                   S: conv2d_27_scratch0                                             
+                                                                   W: conv2d_27_weights                      int8(1x3x3x96) (34)     
+                                                                   W: conv2d_27_bias                         int32(96) (30)          
+                                                                   O: conv2d_27_output                       int8(1x4x4x96) (31)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+32     nl_28                  28   Nonlinearity    1536     0      I: conv2d_27_output                       int8(1x4x4x96) (31)     
+                                                                   O: nl_28_output                           int8(1x4x4x96) (73)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+33     eltwise_29             29   Eltwise/mul     1536     0      I: conv2d_27_output                       int8(1x4x4x96) (31)     
+                                                                   I: nl_28_output                           int8(1x4x4x96) (31)     
+                                                                   O: eltwise_29_output                      int8(1x4x4x96) (60)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+34     conv2d_30              30   Conv2D          49184    3200   I: eltwise_29_output                      int8(1x4x4x96) (60)     
+                                                                   S: conv2d_30_scratch0                                             
+                                                                   W: conv2d_30_weights                      int8(32x1x1x96) (38)    
+                                                                   W: conv2d_30_bias                         int32(32) (35)          
+                                                                   O: conv2d_30_output                       int8(1x4x4x32) (36)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+35     pool_31                31   Pool            512      0      I: conv2d_30_output                       int8(1x4x4x32) (36)     
+                                                                   O: pool_31_output                         int8(1x1x1x32) (78)     
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+36     gemm_32                32   Dense           330      360    I: pool_31_output                         int8(1x1x1x32) (78)     
+                                                                   S: gemm_32_scratch0                                               
+                                                                   W: gemm_32_weights                        int8(10x32) (67)        
+                                                                   W: gemm_32_bias                           int32(10) (64)          
+                                                                   O: gemm_32_output                         int8(1x10) (65)         
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+37     nl_33                  33   Nonlinearity    150      0      I: gemm_32_output                         int8(1x10) (65)         
+                                                                   S: nl_33_scratch0                                                 
+                                                                   O: nl_33_output                           int8(1x10) (75)         
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+38     conversion_34          34   Conversion      20       0      I: nl_33_output                           int8(1x10) (75)         
+                                                                   O: conversion_34_output                   f32(1x10) (53)          
+------ ---------------------- ---- --------------- -------- ------ ----------------------------------------- ----------------------- 
+
+
+
+Number of operations per c-layer
+------- ------ ---------------------------- ----------- ------------- 
+c_id    m_id   name (type)                          #op          type 
+------- ------ ---------------------------- ----------- ------------- 
+0       0      conversion_0 (Conversion)          6,144   smul_f32_s8 
+1       1      conv2d_1 (Conv2D)                110,608    smul_s8_s8 
+2       2      nl_2 (Nonlinearity)                4,096      op_s8_s8 
+3       3      eltwise_3 (Eltwise/mul)            4,096      op_s8_s8 
+4       4      conv2d_4_pad_before (Pad)              0    smul_s8_s8 
+5       4      conv2d_4 (Conv2D)                 36,880    smul_s8_s8 
+6       5      nl_5 (Nonlinearity)                4,096      op_s8_s8 
+7       6      eltwise_6 (Eltwise/mul)            4,096      op_s8_s8 
+8       7      conv2d_7 (Conv2D)                 65,552    smul_s8_s8 
+9       8      eltwise_8 (Eltwise/add)            4,096      op_s8_s8 
+10      9      conv2d_9 (Conv2D)                262,208    smul_s8_s8 
+11      10     nl_10 (Nonlinearity)              16,384      op_s8_s8 
+12      11     eltwise_11 (Eltwise/mul)          16,384      op_s8_s8 
+13      12     conv2d_12_pad_before (Pad)             0    smul_s8_s8 
+14      12     conv2d_12 (Conv2D)                36,928    smul_s8_s8 
+15      13     nl_13 (Nonlinearity)               4,096      op_s8_s8 
+16      14     eltwise_14 (Eltwise/mul)           4,096      op_s8_s8 
+17      15     conv2d_15 (Conv2D)                98,328    smul_s8_s8 
+18      16     conv2d_16 (Conv2D)               147,552    smul_s8_s8 
+19      17     nl_17 (Nonlinearity)               6,144      op_s8_s8 
+20      18     eltwise_18 (Eltwise/mul)           6,144      op_s8_s8 
+21      19     conv2d_19_pad_before (Pad)             0    smul_s8_s8 
+22      19     conv2d_19 (Conv2D)                55,392    smul_s8_s8 
+23      20     nl_20 (Nonlinearity)               6,144      op_s8_s8 
+24      21     eltwise_21 (Eltwise/mul)           6,144      op_s8_s8 
+25      22     conv2d_22 (Conv2D)               147,480    smul_s8_s8 
+26      23     eltwise_23 (Eltwise/add)           1,536      op_s8_s8 
+27      24     conv2d_24 (Conv2D)               147,552    smul_s8_s8 
+28      25     nl_25 (Nonlinearity)               6,144      op_s8_s8 
+29      26     eltwise_26 (Eltwise/mul)           6,144      op_s8_s8 
+30      27     conv2d_27_pad_before (Pad)             0    smul_s8_s8 
+31      27     conv2d_27 (Conv2D)                13,920    smul_s8_s8 
+32      28     nl_28 (Nonlinearity)               1,536      op_s8_s8 
+33      29     eltwise_29 (Eltwise/mul)           1,536      op_s8_s8 
+34      30     conv2d_30 (Conv2D)                49,184    smul_s8_s8 
+35      31     pool_31 (Pool)                       512    smul_s8_s8 
+36      32     gemm_32 (Dense)                      330    smul_s8_s8 
+37      33     nl_33 (Nonlinearity)                 150      op_s8_s8 
+38      34     conversion_34 (Conversion)            20   smul_s8_f32 
+------- ------ ---------------------------- ----------- ------------- 
+total                                         1,281,652 
+
+Number of operation types
+---------------- ----------- ----------- 
+operation type             #           % 
+---------------- ----------- ----------- 
+smul_f32_s8            6,144        0.5% 
+smul_s8_s8         1,172,426       91.5% 
+op_s8_s8             103,062        8.0% 
+smul_s8_f32               20        0.0% 
+
+Complexity report (model)
+------ ------------------------------- ------------------------- ------------------------- ---------- 
+m_id   name                            c_macc                    c_rom                     c_id       
+------ ------------------------------- ------------------------- ------------------------- ---------- 
+0      serving_default_keras_tensor0   |                  0.5%   |                  0.0%   [0]        
+1      conv2d_1                        |||||||            8.6%   |||                2.7%   [1]        
+2      nl_2                            |                  0.3%   |                  0.0%   [2]        
+3      eltwise_3                       |                  0.3%   |                  0.0%   [3]        
+4      conv2d_4                        |||                2.9%   |                  1.1%   [4, 5]     
+5      nl_5                            |                  0.3%   |                  0.0%   [6]        
+6      eltwise_6                       |                  0.3%   |                  0.0%   [7]        
+7      conv2d_7                        ||||               5.1%   ||                 1.7%   [8]        
+8      eltwise_8                       |                  0.3%   |                  0.0%   [9]        
+9      conv2d_9                        ||||||||||||||||  20.5%   |||||||            6.9%   [10]       
+10     nl_10                           |                  1.3%   |                  0.0%   [11]       
+11     eltwise_11                      |                  1.3%   |                  0.0%   [12]       
+12     conv2d_12                       |||                2.9%   ||||               4.5%   [13, 14]   
+13     nl_13                           |                  0.3%   |                  0.0%   [15]       
+14     eltwise_14                      |                  0.3%   |                  0.0%   [16]       
+15     conv2d_15                       ||||||             7.7%   ||||||||           8.8%   [17]       
+16     conv2d_16                       |||||||||         11.5%   |||||||||||||     14.5%   [18]       
+17     nl_17                           |                  0.5%   |                  0.0%   [19]       
+18     eltwise_18                      |                  0.5%   |                  0.0%   [20]       
+19     conv2d_19                       ||||               4.3%   ||||||             6.7%   [21, 22]   
+20     nl_20                           |                  0.5%   |                  0.0%   [23]       
+21     eltwise_21                      |                  0.5%   |                  0.0%   [24]       
+22     conv2d_22                       |||||||||         11.5%   ||||||||||||      12.9%   [25]       
+23     eltwise_23                      |                  0.1%   |                  0.0%   [26]       
+24     conv2d_24                       |||||||||         11.5%   |||||||||||||     14.5%   [27]       
+25     nl_25                           |                  0.5%   |                  0.0%   [28]       
+26     eltwise_26                      |                  0.5%   |                  0.0%   [29]       
+27     conv2d_27                       |                  1.1%   ||||||             6.7%   [30, 31]   
+28     nl_28                           |                  0.1%   |                  0.0%   [32]       
+29     eltwise_29                      |                  0.1%   |                  0.0%   [33]       
+30     conv2d_30                       |||                3.8%   ||||||||||||||||  17.2%   [34]       
+31     pool_31                         |                  0.0%   |                  0.0%   [35]       
+32     tfl_pseudo_qconst1              |                  0.0%   ||                 1.9%   [36]       
+33     nl_33                           |                  0.0%   |                  0.0%   [37]       
+34     conversion_34                   |                  0.0%   |                  0.0%   [38]       
+------ ------------------------------- ------------------------- ------------------------- ---------- 
+macc=1,281,652 weights=18,600 act=32,768 ram_io=0
+ 
+ Requested memory size by section - "stm32f4" target
+ ------------------------------ -------- -------- -------- -------- 
+ module                             text   rodata     data      bss 
+ ------------------------------ -------- -------- -------- -------- 
+ NetworkRuntime1020_CM4_GCC.a     33,720        0        0        0 
+ my_network.o                      1,616    6,840   10,604      508 
+ my_network_data.o                    48       16       88        0 
+ lib (toolchain)*                  4,044       24        0        0 
+ ------------------------------ -------- -------- -------- -------- 
+ RT total**                       39,428    6,880   10,692      508 
+ ------------------------------ -------- -------- -------- -------- 
+ weights                               0   18,600        0        0 
+ activations                           0        0        0   32,768 
+ io                                    0        0        0        0 
+ ------------------------------ -------- -------- -------- -------- 
+ TOTAL                            39,428   25,480   10,692   33,276 
+ ------------------------------ -------- -------- -------- -------- 
+ *  toolchain objects (libm/libgcc*)
+ ** RT AI runtime objects (kernels+infrastructure)
+  
+  Summary - "stm32f4" target
+  ---------------------------------------------------
+               FLASH (ro)      %*   RAM (rw)       % 
+  ---------------------------------------------------
+  RT total         57,000   75.4%     11,200   25.5% 
+  ---------------------------------------------------
+  TOTAL            75,600             43,968         
+  ---------------------------------------------------
+  *  rt/total
+
+
+Generated files (7)
+------------------------------------------------------------------------ 
+C:\Users\yyigi\.stm32cubemx\my_network_output\my_network_data_params.h   
+C:\Users\yyigi\.stm32cubemx\my_network_output\my_network_data_params.c   
+C:\Users\yyigi\.stm32cubemx\my_network_output\my_network_data.h          
+C:\Users\yyigi\.stm32cubemx\my_network_output\my_network_data.c          
+C:\Users\yyigi\.stm32cubemx\my_network_output\my_network_config.h        
+C:\Users\yyigi\.stm32cubemx\my_network_output\my_network.h               
+C:\Users\yyigi\.stm32cubemx\my_network_output\my_network.c               

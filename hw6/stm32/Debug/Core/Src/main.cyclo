@@ -1,0 +1,14 @@
+../Core/Src/main.c:44:5:ai_init	3
+../Core/Src/main.c:69:5:ai_run	2
+../Core/Src/main.c:90:5:main	7
+../Core/Src/main.c:159:6:SystemClock_Config	1
+../Core/Src/main.c:186:13:MX_CRC_Init	2
+../Core/Src/main.c:195:13:MX_USART2_UART_Init	1
+../Core/Src/main.c:208:13:MX_GPIO_Init	1
+../Core/Src/main.c:222:6:Error_Handler	1
+../Core/Src/main.c:225:5:_write	1
+../Core/Src/main.c:229:5:_read	1
+../Core/Src/main.c:230:5:_close	1
+../Core/Src/main.c:231:5:_lseek	1
+../Core/Src/main.c:232:5:_fstat	1
+../Core/Src/main.c:233:5:_isatty	1
